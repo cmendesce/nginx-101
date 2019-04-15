@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>Nginx 101</h1>
+					<p>Carlos Mendes Aderaldo</p>
+				</section>
+				<section>
+					<h2>Architecture</h2>
+					<img src="https://camo.githubusercontent.com/a1d60c4ade45cd794b70b685b8973369593f4b94/68747470733a2f2f696d6775722e636f6d2f65397a777930552e706e67" />
+				</section>
+				<section>
+					<h2>HTTP Load Balancing</h2>
+					<section data-markdown>
+						<p>
+						The weight parameter instructs NGINX to pass <strong>twice</strong> as many connections to the <strong>second server</strong>.
+						</p>
+						<p>
+						The weight parameter defaults to 1.
+						</p>
+						```
+						upstream backend {
+							server 10.10.12.45:80 weight=1; 
+							server app.example.com:80 weight=2;
+						} 
+
+						server {
+							location / {
+								proxy_pass http://backend;
+							}
+						}
+						```
+					</section>
+				</section>
+				
+				<section>
+					<h2>HTTP Basic Auth</h2>
+					<section data-markdown>
+						```
+						location / {
+							auth_basic "Private site"; 
+							auth_basic_user_file conf.d/passwd;
+						}
+						```
+					</section>
+				</section>
+				<section>
+					<h2>HTTP Basic Auth</h2>
+					<section data-markdown>
+						File passwd
+						```
+						# comment
+						name1:password1
+						name2:password2:comment
+						name3:password3
+						```
+					</section>
+				</section>
+				<section>
+					<h2>HTTP Basic Auth</h2>
+					<section data-markdown>
+						To generate an encrypted password
+						```
+						openssl passwd MyPassword1234
+						```
+						Both the openssl and htpasswd commands can generate passwords with the apr1 algorithm, 
+						which NGINX can also understand.
+					</section>
+				</section>
+				<section>
+					<h2>Cache</h2>
+				</section>
+				<section>
+					<h2>Using Includes for Clean Configs</h2>
+				</section>
+				<section>
+					<h2>That's all</h2>
+				</section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
